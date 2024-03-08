@@ -14,8 +14,8 @@ class UserSeed extends Seeder
     public function run(): void
     {
         User::create([
-            'email' => 'admin@gmail.com',
-            'password' => 'passer',
+            'email' => 'it@patisen.sn',
+            'password' => 'Patisen4Ever',
             'nom' => 'Admin',
             'prenom' => 'Administrateur',
             'departement' => 'IT'

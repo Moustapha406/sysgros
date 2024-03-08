@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
 
@@ -12,8 +14,19 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+    public function  __construct()
+    {
+        $this->middleware('permission:user-read|user-create|user-edit|user-delete', ['only' => ['index', 'store']]);
+        $this->middleware('permission:user-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:user-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:user-delete', ['only' => ['destroy']]);
+    }
+
     public function index(Request $request)
     {
+        $roles = Role::all();
+
         $users = User::query()
             ->when(
                 $request->search,
@@ -29,7 +42,7 @@ class UserController extends Controller
 
 
 
-        return view('users.index', compact('users'));
+        return view('users.index', compact('users', 'roles'));
     }
 
     /**
@@ -37,9 +50,11 @@ class UserController extends Controller
      */
     public function create()
     {
+        //$users = User::all();
         $users = User::all();
+        $roles = Role::all();
 
-        return view('admin.users.form', compact('users'));
+        return view('users.form', compact('users', 'roles'));
     }
 
     /**
@@ -65,6 +80,8 @@ class UserController extends Controller
             'password' => Hash::make($request->password)
         ]);
 
+        $user->assignRole($request->input('roles', []));
+
         event(new Registered($user));
 
         return redirect(route('users.index'));
@@ -83,7 +100,9 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        return view('users.form', ['user' => $user]);
+        $roles = Role::all();
+
+        return view('users.form', ['user' => $user, 'roles' => $roles]);
     }
 
     /**
@@ -108,6 +127,9 @@ class UserController extends Controller
             ]);
         }
 
+        DB::table('model_has_roles')->where('model_id', $id)->delete();
+        $user->assignRole($request->input('roles', []));
+
         $user->save();
 
         return redirect(route('users.index'));
@@ -118,6 +140,5 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
     }
 }

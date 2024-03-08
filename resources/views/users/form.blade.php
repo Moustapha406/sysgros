@@ -51,7 +51,7 @@
                                 
                                 
 
-                                <div class="form-group col-6">
+                                <div class="form-group col-4">
                                     <label for="email">Email</label>
                                     <input id="email" type="mail" class="form-control" value="{{ isset($user) ? $user->email : ''}}" name="email" autofocus>
                                         @error('email')
@@ -61,7 +61,7 @@
                                         @enderror
                                 </div>
 
-                                <div class="form-group col-6">
+                                <div class="form-group col-4">
                                     <label for="password">Mot de passe</label>
                                     <input id="password" type="password"  class="form-control" name="password"  >
                                         @error('password')
@@ -69,6 +69,22 @@
                                                 le password est obligatoire
                                             </div>
                                         @enderror
+                                </div>
+
+                                <div class="form-group col-4">
+                                    <label for="prenom">Rôles</label>
+                                    <select class="form-control select2" multiple="" name="roles[]">
+                                        <option value="">....</option>
+                                        @php
+                                            $selectedRoles= collect(old('roles',isset($user) ? $user->roles->pluck('id')->toArray() : []))
+                                        @endphp
+
+                                        @foreach ($roles as $role)
+                                            <option value="{{ $role->name }}" {{ $selectedRoles->contains($role->id) ? 'selected' : '' }} >
+                                                {{$role->name}}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 
                             </div>

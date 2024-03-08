@@ -42,7 +42,10 @@ Route::middleware('auth')
     ->namespace('App\Http\Controllers')
     ->group(function () {
         Route::resources(['profile' => 'ProfileController']);
+        Route::put('/profile', [ProfileController::class, 'updatePassword'])->name('profile.updatePassword');
         Route::resources(['users' => 'UserController']);
+        Route::resources(['roles' => 'RoleController']);
+        Route::resources(['permissions' => 'PermissionController']);
         Route::resources(['vis' => 'ViController']);
         Route::post('/vis', [ViController::class, 'update_vis'])->name('vis.update_vis');
         Route::get('/', [ViController::class, 'index'])->name('/');

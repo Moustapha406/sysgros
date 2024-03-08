@@ -30,6 +30,7 @@
                             <th>Nom</th>
                             <th>Prénom</th>
                             <th>Departement</th>
+                            <th>Rôles</th>
                             <th class="text-center">Action</th>
                         </tr>
                     @foreach ($users as $user)
@@ -38,6 +39,11 @@
                             <td class="text-truncate">{{$user->nom}}</td>
                             <td class="align-middle">{{$user->prenom}}</td>
                             <td class="align-middle">{{$user->departement}}</td>
+                            <td class="align-middle">
+                              @foreach ($user->roles as $role)
+                                  <span class="badge badge-info">{{$role->name}}</span>
+                              @endforeach
+                            </td>
                             
                             <td class="text-center">
                                 <a href="{{route('users.edit',$user->id)}}" class="test-info">

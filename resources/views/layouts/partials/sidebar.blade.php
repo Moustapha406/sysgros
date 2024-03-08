@@ -9,30 +9,42 @@
         <ul class="sidebar-menu">
 
             
-                <li class="menu-header">Administration</li>
-           
-
             
+        
+
+        
+            @can('user-read')
+
+                <li class="menu-header">Administration</li>
+
                 <li class="dropdown">
                     <a href="#" class="menu-toggle nav-link has-dropdown">
                         <span class="material-symbols-outlined">groups</span><span>Parametrage</span>
                     </a>
                     <ul class="dropdown-menu">
                         <li><a class="nav-link" href="{{route('users.index')}}">Utilisateurs</a></li>
+                        @can('role-read')
+                            <li><a class="nav-link" href="{{route('roles.index')}}">Roles</a></li>
+                        @endcan
+                        @can('permission-read')
+                            <li><a class="nav-link" href="{{route('permissions.index')}}">Permissions</a></li>
+                        @endcan
 
                     </ul>
                 </li>
+                
+            @endcan
             
+            <li class="menu-header">Gestion</li>
 
-            {{-- <li class="dropdown">
+            <li class="dropdown">
                 <a href="#" class="menu-toggle nav-link has-dropdown">
-                    <span class="material-symbols-outlined">menu</span><span>Gestion des menus</span>
+                    <span class="material-symbols-outlined">menu</span><span>Gestion des vis</span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="#">Menu</a></li>
-
+                    <li><a class="nav-link" href="{{route('/')}}">vis</a></li>
                 </ul>
-            </li> --}}
+            </li>
 
             
             

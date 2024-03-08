@@ -2,23 +2,48 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
-use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\View\View;
+use App\Http\Requests\ProfileUpdateRequest;
 
 class ProfileController extends Controller
 {
     /**
      * Display the user's profile form.
      */
+
+
+    public function index()
+    {
+
+        $user = Auth()->user();
+
+        return view('profile.index', compact('user'));
+    }
+
     public function edit(Request $request): View
     {
         return view('profile.edit', [
             'user' => $request->user(),
         ]);
+    }
+
+    public function updatePassword(Request $request)
+    {
+
+        $data = $request->validate([
+            'password' => ['required', 'confirmed']
+        ]);
+
+        $request->user()->update([
+            'password' => Hash::make($data['password'])
+        ]);
+
+        return redirect()->route('profile.index')->with('success', 'Le mot de passe est bien modifier');
     }
 
     /**
